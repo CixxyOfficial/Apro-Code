@@ -1,3 +1,9 @@
+import { StatusBar } from '@capacitor/status-bar';
+
+document.addEventListener('DOMContentLoaded', () => {
+  StatusBar.hide();
+});
+
     const codeEditor = document.getElementById('codeEditor');
     const codeHighlight = document.getElementById('codeHighlight');
     const lineNumbers = document.getElementById('lineNumbers');
