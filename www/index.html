@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APRO-CODE - HTML Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-grid"></div>
+    <div class="loading-scanline"></div>
+    <div class="loading-core">
+      <div class="loading-core-glow"></div>
+      <svg class="loading-ring" viewBox="0 0 118 118">
+        <circle class="loading-ring-track-outer" cx="59" cy="59" r="57"></circle>
+        <circle class="loading-ring-track" cx="59" cy="59" r="52"></circle>
+        <circle class="loading-ring-progress" id="loadingRingProgress" cx="59" cy="59" r="52"></circle>
+      </svg>
+      <div class="loading-glyph">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="8 4 2 12 8 20"></polyline>
+          <polyline points="16 4 22 12 16 20"></polyline>
+        </svg>
+      </div>
+    </div>
+    <div class="loading-brand">APRO-CODE</div>
+    <div class="loading-status">
+      <span id="loadingStatusText">INITIALIZING</span>
+      <span class="loading-percent" id="loadingPercent">0%</span>
+    </div>
+    <div class="loading-bar-track"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
+  </div>
+  <div class="container">
+    <div class="header">
+      <div class="header-left">
+        <button class="toolbar-btn icon-only" id="hamburgerBtn" title="Explorer">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3.5" y1="6.5" x2="20.5" y2="6.5"></line>
+            <line x1="3.5" y1="12" x2="20.5" y2="12"></line>
+            <line x1="3.5" y1="17.5" x2="20.5" y2="17.5"></line>
+          </svg>
+        </button>
+        <div class="header-title"><span class="dot"></span>APRO-CODE</div>
+      </div>
+      <div class="header-right">
+        <button class="toolbar-btn" id="searchBtn" title="Cari teks di kode">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span>Cari</span>
+        </button>
+        <button class="toolbar-btn icon-only" id="saveBtn" title="Simpan file (unduh)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+        </button>
+        <button class="run-btn" id="runBtn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="6 3 20 12 6 21 6 3"></polygon>
+          </svg>
+          Run
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar / file explorer -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span>EXPLORER</span>
+        <button class="sidebar-close" id="sidebarClose" title="Close">✕</button>
+      </div>
+      <button class="new-file-btn" id="newFileBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        NEW FILE
+      </button>
+      <button class="import-file-btn" id="importFileBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12"></path>
+          <polyline points="7 8 12 3 17 8"></polyline>
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+        </svg>
+        IMPORT FILE
+      </button>
+      <input type="file" id="importFileInput" accept=".html,.htm,.css,.js,.json,.txt,.md" multiple hidden>
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+
+    <!-- New File modal -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-box">
+        <div class="modal-title">Buat File Baru</div>
+        <input type="text" id="newFileName" class="modal-input" placeholder="nama-file" autocomplete="off" spellcheck="false">
+        <div class="modal-label">Pilih Tipe</div>
+        <div class="type-select">
+          <button class="type-btn active" data-ext="html" data-color="#ff6b8b">
+            <span class="type-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="8 4 2 12 8 20"></polyline>
+                <polyline points="16 4 22 12 16 20"></polyline>
+              </svg>
+            </span>HTML
+          </button>
+          <button class="type-btn" data-ext="css" data-color="#5ac8fa">
+            <span class="type-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="9" y1="4" x2="7" y2="20"></line>
+                <line x1="17" y1="4" x2="15" y2="20"></line>
+                <line x1="4" y1="9" x2="20" y2="9"></line>
+                <line x1="3" y1="15" x2="19" y2="15"></line>
+              </svg>
+            </span>CSS
+          </button>
+          <button class="type-btn" data-ext="js" data-color="#ffcb6b">
+            <span class="type-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 4c-2 0-3 1-3 3v2.5c0 1.2-1 2.5-2.2 2.5C5 12 6 13.3 6 14.5V17c0 2 1 3 3 3"></path>
+                <path d="M15 4c2 0 3 1 3 3v2.5c0 1.2 1 2.5 2.2 2.5-1.2 0-2.2 1.3-2.2 2.5V17c0 2-1 3-3 3"></path>
+              </svg>
+            </span>JS
+          </button>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn cancel" id="modalCancel">Batal</button>
+          <button class="modal-btn create" id="modalCreate">Buat</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal peringatan hapus file -->
+    <div class="modal-backdrop" id="deleteModalBackdrop">
+      <div class="modal-box">
+        <div class="modal-warning-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          WARNING!!!
+        </div>
+        <div class="modal-warning-text" id="deleteModalText"></div>
+        <div class="modal-actions">
+          <button class="modal-btn cancel" id="deleteModalCancel">Batal</button>
+          <button class="modal-btn danger" id="deleteModalConfirm">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="editorArea">
+      <div class="line-numbers" id="lineNumbers"></div>
+      <div class="editor-wrapper">
+        <textarea id="codeEditor" spellcheck="false"><!DOCTYPE html>
+<html>
+<head>
+  <title>Hello</title>
+</head>
+<body>
+  <h1>Halo Dunia!</h1>
+  <p>Tulis kode di sini, lalu klik Run untuk membuka jendela preview.</p>
+</body>
+</html></textarea>
+        <div id="codeHighlight"></div>
+        <div class="match-highlight" id="matchHighlight"></div>
+        <div class="mirror-outer" id="mirrorOuter" aria-hidden="true">
+          <div class="mirror-inner" id="mirrorInner"></div>
+        </div>
+      </div>
+
+      <!-- Find widget: pencarian murni, tidak menyentuh/menyeleksi teks di editor -->
+      <div class="find-widget" id="findWidget">
+        <div class="find-row">
+          <input type="text" id="findInput" placeholder="Cari teks..." autocomplete="off" spellcheck="false">
+          <button class="find-btn close" id="findClose" title="Tutup">✕</button>
+        </div>
+        <div class="find-row">
+          <button class="find-btn" id="findPrev" title="Sebelumnya">&lt;</button>
+          <span class="find-count" id="findCount">0/0</span>
+          <button class="find-btn" id="findNext" title="Berikutnya">&gt;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="backdrop" id="backdrop"></div>
+
+    <div class="win" id="previewWin">
+      <div class="win-titlebar" id="winTitlebar">
+        <div class="win-dots">
+          <span class="win-dot red" id="winClose" title="Close">✕</span>
+          <span class="win-dot yellow" id="winMin" title="Minimize">–</span>
+          <span class="win-dot green" id="winMax" title="Maximize">⤢</span>
+        </div>
+        <div class="win-url"><span class="live-dot"></span>localhost/preview.html</div>
+        <button class="win-refresh" id="winRefresh" title="Reload">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="win-body">
+        <iframe id="previewFrame"></iframe>
+      </div>
+      <div class="rz rz-n" data-dir="n"></div>
+      <div class="rz rz-s" data-dir="s"></div>
+      <div class="rz rz-e" data-dir="e"></div>
+      <div class="rz rz-w" data-dir="w"></div>
+      <div class="rz rz-ne" data-dir="ne"></div>
+      <div class="rz rz-nw" data-dir="nw"></div>
+      <div class="rz rz-se" data-dir="se"></div>
+      <div class="rz rz-sw" data-dir="sw"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
